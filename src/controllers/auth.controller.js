@@ -118,7 +118,9 @@ const forgotPassword = async (req, res) => {
       data: {},
     });
   } catch (error) {
-    throw error;
+    return res.status(500).send({
+      error: error.message,
+    });
   }
 };
 
@@ -156,8 +158,9 @@ const verifyOTP = async (req, res) => {
       data: { token: token },
     });
   } catch (error) {
-    console.log('error', error);
-    throw error;
+    return res.status(500).send({
+      error: error.message,
+    });
   }
 };
 
@@ -177,7 +180,9 @@ const resetPassword = async (req, res) => {
       data: {},
     });
   } catch (error) {
-    throw error;
+    return res.status(500).send({
+      error: error.message,
+    });
   }
 };
 
@@ -220,8 +225,9 @@ const updatePassword = async (req, res) => {
       data: {},
     });
   } catch (error) {
-    console.log('error', error);
-    throw error;
+    return res.status(500).send({
+      error: error.message,
+    });
   }
 };
 
@@ -266,7 +272,9 @@ const updateEmail = async (req, res) => {
       data: { user },
     });
   } catch (error) {
-    throw error;
+    return res.status(500).send({
+      error: error.message,
+    });
   }
 };
 
