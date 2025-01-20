@@ -1,0 +1,37 @@
+{
+  "name": "node-express-boilerplate",
+  "version": "1.0.0",
+  "description": "A boilerplate application for building web apps using Node.js and MongoDB",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "lint": "prettier --write .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thewalimuhammad/node-express-boilerplate.git"
+  },
+  "keywords": [],
+  "author": "Wali Muhammad",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/thewalimuhammad/node-express-boilerplate/issues"
+  },
+  "homepage": "https://github.com/thewalimuhammad/node-express-boilerplate#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "handlebars": "^4.7.8",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2"
+  }
+}
