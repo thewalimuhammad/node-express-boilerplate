@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { refreshTokenModel } = require('../models');
 
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -28,4 +29,23 @@ const generateToken = (id) => {
   });
 };
 
-module.exports = { authMiddleware, generateToken };
+const generateRefreshToken = async (userId) => {
+  const refreshToken = jwt.sign(
+    { id: userId },
+    process.env.JWT_REFRESH_SECRET,
+    {
+      expiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
+    },
+  );
+
+  await refreshTokenModel.create({
+    token: refreshToken,
+    userId: userId,
+    expiresAt: new Date(
+      Date.now() + parseInt(process.env.JWT_REFRESH_EXPIRES_IN) * 1000,
+    ),
+  });
+
+  return refreshToken;
+};
+module.exports = { authMiddleware, generateToken, generateRefreshToken };
