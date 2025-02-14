@@ -1,8 +1,12 @@
-const { generateToken } = require('../middlewares/auth.middleware');
-const { authModel, userModel } = require('../models');
+const {
+  generateToken,
+  generateRefreshToken,
+} = require('../middlewares/auth.middleware');
+const { authModel, userModel, refreshTokenModel } = require('../models');
 const generateOTP = require('../utils/generateOTP');
 const bcrypt = require('bcrypt');
 const { emailService } = require('../services');
+const jwt = require('jsonwebtoken');
 
 const signupUser = async (req, res) => {
   try {
@@ -55,7 +59,6 @@ const signupUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    console.log(req.user);
     const query = {
       email: req.body.email,
       isVerified: true,
@@ -79,9 +82,10 @@ const loginUser = async (req, res) => {
       });
     }
     const token = await generateToken(user._id);
+    const refreshToken = await generateRefreshToken(user._id);
     return res.status(200).send({
       message: 'Logged in successfully',
-      data: { token: token },
+      data: { token: token, refreshToken: refreshToken },
     });
   } catch (error) {
     return res.status(500).send({
@@ -278,6 +282,36 @@ const updateEmail = async (req, res) => {
   }
 };
 
+const refreshToken = async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) {
+    return res.status(401).send({ message: 'Refresh token is required' });
+  }
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const tokenDoc = await refreshTokenModel.findOne({
+      token: refreshToken,
+      userId: decoded.id,
+    });
+
+    if (!tokenDoc) {
+      return res.status(401).send({ message: 'Invalid refresh token.' });
+    }
+
+    const newToken = generateToken(decoded.id);
+    const newRefreshToken = await generateRefreshToken(decoded.id);
+
+    await refreshTokenModel.findByIdAndDelete(tokenDoc._id);
+
+    return res.status(200).send({
+      message: 'Token refreshed successfully',
+      data: { token: newToken, refreshToken: newRefreshToken },
+    });
+  } catch (error) {
+    return res.status(401).send({ message: 'Invalid refresh token' });
+  }
+};
+
 module.exports = {
   signupUser,
   loginUser,
@@ -287,4 +321,5 @@ module.exports = {
   updatePassword,
   resetPassword,
   updateEmail,
+  refreshToken,
 };

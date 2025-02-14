@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "d01fff39-8c4f-4397-8822-a19834436702",
+		"_postman_id": "c4712a79-f311-47a9-bb64-03a591275e0e",
 		"name": "Node-Express Boilerplate",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "37145243"
+		"_exporter_id": "41611470"
 	},
 	"item": [
 		{
@@ -17,8 +17,10 @@
 							"script": {
 								"exec": [
 									"const response = pm.response.json();\r",
-									"const token = response.data.token; // Adjust based on your API response\r",
-									"pm.environment.set(\"authToken\", token);"
+									"const token = response.data.token;\r",
+									"const refreshToken = response.data.refreshToken\r",
+									"pm.environment.set(\"authToken\", token);\r",
+									"pm.environment.set(\"refreshToken\", refreshToken)"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -30,7 +32,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"Baby_Considine@gmail.com\",\r\n    \"password\": \"Asdf@123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"walitest1@yopmail.com\",\r\n    \"password\": \"Asdf@123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -57,7 +59,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"{{$randomFullName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"role\": \"SUPER_ADMIN\",\r\n    \"password\": \"Asdf@123\"\r\n}\r\n// role must be USER, ADMIN, OR SUPER_ADMIN\r\n",
+							"raw": "{\r\n    \"name\": \"{{$randomFullName}}\",\r\n    \"email\": \"walitest1@yopmail.com\",\r\n    \"role\": \"SUPER_ADMIN\",\r\n    \"password\": \"Asdf@123\"\r\n}\r\n// role must be USER, ADMIN, OR SUPER_ADMIN\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,6 +93,16 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
 					"request": {
@@ -101,7 +113,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"as14@yopmail.com\",\r\n    \"otp\": \"3759\"\r\n}",
+							"raw": "{\r\n    \"email\": \"walitest1@yopmail.com\",\r\n    \"otp\": 6428\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -265,6 +277,52 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "refresh-token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"const token = response.data.token;\r",
+									"const refreshToken = response.data.refreshToken\r",
+									"pm.environment.set(\"authToken\", token);\r",
+									"pm.environment.set(\"refreshToken\", refreshToken)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YWRlMTI5MzhlOGIwMzIyNjA2ZGEwYSIsImlhdCI6MTczOTUxMzA0OSwiZXhwIjoxNzM5NTEzMTA5fQ.HwIcaEBSyyQNet_TBMRAVlzJOT4QvUBruuZMUhGIy7w\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/refresh-token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"description": "auth routes"
@@ -341,7 +399,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "{{base_url}}/user/6798bad7ff10f4e9fed20256",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"6798bad7ff10f4e9fed20256"
+							]
 						}
 					},
 					"response": []
@@ -351,8 +416,24 @@
 					"request": {
 						"method": "PATCH",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": ""
+							"raw": "{{base_url}}/user/6798bad7ff10f4e9fed20256",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"6798bad7ff10f4e9fed20256"
+							]
 						}
 					},
 					"response": []
@@ -363,7 +444,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "{{base_url}}/user/6798bad7ff10f4e9fed20256",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"6798bad7ff10f4e9fed20256"
+							]
 						}
 					},
 					"response": []
